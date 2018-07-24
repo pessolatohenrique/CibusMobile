@@ -7,13 +7,13 @@ import { createStackNavigator } from 'react-navigation';
 
 import { meal } from './reducers/meal';
 import HomeScreen from './components/HomeScreen';
+import Login from './components/Login';
 
 const store = createStore(meal, applyMiddleware(thunkMiddleware));
 
 const RootStack = createStackNavigator({
-    Home: {
-      screen: HomeScreen
-    },
+    Login: { screen: Login },
+    Home: { screen: HomeScreen },
 });
   
 export default class App extends Component {
