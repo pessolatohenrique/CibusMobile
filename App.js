@@ -1,28 +1,28 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
+import React, { Component } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { createStore, applyMiddleware } from 'redux';
+import { Provider, connect } from 'react-redux';
+import thunkMiddleware from 'redux-thunk';
+import { createStackNavigator } from 'react-navigation';
 
-import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View} from 'react-native';
+import { meal } from './reducers/meal';
+import HomeScreen from './components/HomeScreen';
+import Login from './components/Login';
 
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
-  android:
-    'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
+const store = createStore(meal, applyMiddleware(thunkMiddleware));
+
+const RootStack = createStackNavigator({
+    Login: { screen: Login },
+    Home: { screen: HomeScreen },
 });
-
-type Props = {};
-export default class App extends Component<Props> {
+  
+export default class App extends Component {
+    
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>Welcome to React Native!</Text>
-      </View>
+      <Provider store={store}>
+        <RootStack />
+      </Provider>
     );
   }
 }
@@ -30,18 +30,7 @@ export default class App extends Component<Props> {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
+    backgroundColor: '#fff',
+    marginTop: 50
+  }
 });
