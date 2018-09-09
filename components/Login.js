@@ -1,37 +1,62 @@
 import React, { Component } from 'react';
-import { StyleSheet, Dimensions, View } from 'react-native';
-import { Container, Content, Form, Item, Input, Label, Button, Text } from 'native-base';
+import { connect } from 'react-redux';
+import { Field, reduxForm } from 'redux-form'
+import { StyleSheet, Dimensions, View, Image, ToastAndroid } from 'react-native';
+import { Container, Content, Form, Item, Button, Text, Toast } from 'native-base';
+import { renderInput, renderPasswordInput } from '../helpers/RenderHelper';
+import LoginLogic from '../logicals/LoginLogic';
 
-export default class Login extends Component {
+class Login extends Component {
     static navigationOptions = {
-        title: 'Login',
+        header: null
     };
 
     constructor(props) {
         super(props);
-        this.state = { loading: true };
+        this.submit = this.submit.bind(this);
+        // console.log(this.props.navigation.dispatch());
     }
 
+    submit(values) {
+        LoginLogic.authorize(this.props, values);        
+    }
 
     render() {
-        
+        const { handleSubmit, pristine, reset, submitting } = this.props;
+    
         return (
             <Container>
                 <Content>
+                    
                     <Form>
                         <View style={styles.container}> 
+                            <Image
+                                style={styles.miniature}
+                                source={require('../images/logo_blue_mini.png')}
+                            />
                             <View style={styles.login}>
-                            <Item stackedLabel>
-                                <Label>Usuário</Label>
-                                <Input />
-                            </Item>
-                            <Item stackedLabel>
-                                <Label>Senha</Label>
-                                <Input secureTextEntry={true}/>
-                            </Item>
-                            <Button block style={styles.btnLogin}>
-                                <Text>Login</Text>
-                            </Button>
+                                <Field 
+                                    name="username" 
+                                    id="username"
+                                    placeholder='Login' 
+                                    style={styles.inputLogin}
+                                    component={renderInput} 
+                                />
+                            
+                                <Field name="password" 
+                                    placeholder='Senha' 
+                                    style={styles.inputLogin}
+                                    component={renderPasswordInput} 
+                                    autoCapitalize="false"
+                                    onSubmitEditing={ () => handleSubmit(this.submit) }
+                                />
+                                
+                                <Button block 
+                                    onPress={handleSubmit(this.submit)}
+                                    style={styles.btnLogin}
+                                >
+                                    <Text>Login</Text>
+                                </Button>
                             </View>
                         </View>
                     </Form>
@@ -45,23 +70,32 @@ const styles = StyleSheet.create({
     container : {
         flex: 1, 
         flexDirection: 'column',
-        height: Dimensions.get('window').height - 80,
+        height: Dimensions.get('window').height - 10,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        backgroundColor: '#4db6ac'
     },
     login: {
-        width: Dimensions.get('window').width - 20,
+        width: Dimensions.get('window').width - 30
     },
     btnLogin: {
       marginTop: 20,
+    },
+    miniature: {
+        marginBottom: 30,
+        marginTop: 20
     }
 });
 
-/**
- *       <View style={{
-        flex: 1,
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}>
- */
+let LoginForm = reduxForm({
+    form: 'login'
+})(Login)
+
+LoginForm = connect(
+    state => ({
+        login: state.login
+    }),
+    {}
+)(LoginForm)
+
+export default LoginForm;

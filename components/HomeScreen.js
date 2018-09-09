@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-// import { API_ROOT } from '../common/api-config';
+import { API_ROOT } from '../common/api-config';
 import { Container, Header, Content, List, ListItem, Text } from 'native-base';
 import PropTypes from 'prop-types';
 
@@ -9,7 +9,6 @@ export default class HomeScreen extends Component {
       title: 'Welcome World',
     };
     render() {
-        console.log(API_ROOT);
       const { navigate } = this.props.navigation;
       return (
         <Container>

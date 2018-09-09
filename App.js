@@ -1,36 +1,30 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { createStore, applyMiddleware } from 'redux';
+import { createStore, applyMiddleware, combineReducers } from 'redux';
 import { Provider, connect } from 'react-redux';
 import thunkMiddleware from 'redux-thunk';
-import { createStackNavigator } from 'react-navigation';
-
 import { meal } from './reducers/meal';
-import HomeScreen from './components/HomeScreen';
-import Login from './components/Login';
+import { navigation } from './reducers/navigation'
+import { login } from './reducers/login'
+import { reducer as formReducer } from 'redux-form';
+import Navigator from './components/Navigator';
 
-const store = createStore(meal, applyMiddleware(thunkMiddleware));
+const reducer = combineReducers({ 
+    login, 
+    navigation, 
+    meal,
+    form: formReducer 
+})
+const store = createStore(reducer, applyMiddleware(thunkMiddleware),
+    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+);
 
-const RootStack = createStackNavigator({
-    Login: { screen: Login },
-    Home: { screen: HomeScreen },
-});
-  
+
 export default class App extends Component {
-    
   render() {
     return (
       <Provider store={store}>
-        <RootStack />
+        <Navigator />
       </Provider>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    marginTop: 50
-  }
-});
